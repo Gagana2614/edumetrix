@@ -1,0 +1,6 @@
+{
+  "name": "ScholaMetrics",
+  "description": "Realistic student performance analytics dashboard built with HTML, CSS, and vanilla JavaScript featuring cohort KPIs, statistical correlations, interactive charts, intervention tracking, and CSV import/export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

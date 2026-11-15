@@ -1,0 +1,1577 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ScholaMetrics — Indian Academic &amp; Student Performance Analytics</title>
+    <meta
+      name="description"
+      content="Multipurpose Indian university student and faculty performance analytics portal built with HTML, CSS, and vanilla JavaScript featuring 10-point CBCS CGPA, UGC 75% attendance tracking, What-If CGPA simulator, profile management, and CSV reporting."
+    />
+    <meta property="og:title" content="ScholaMetrics — Indian Academic &amp; Student Performance Analytics" />
+    <meta
+      property="og:description"
+      content="Dual-portal CBCS academic analytics for Indian faculty mentors and students: 10.0 CGPA cohort metrics, UGC attendance compliance, What-If simulator, and customizable profiles."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell" id="appShell">
+      <!-- Mobile Sidebar Backdrop -->
+      <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+      <!-- Left Navigation Sidebar -->
+      <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <a href="#overview" class="brand-wordmark" data-nav="home">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </span>
+            <span>ScholaMetrics</span>
+          </a>
+        </div>
+
+        <!-- Portal Role Switcher (Faculty / Student) -->
+        <div class="sidebar-role-wrap">
+          <div class="role-switch" role="group" aria-label="Portal workspace role">
+            <button type="button" class="role-btn active" data-role="faculty">Faculty</button>
+            <button type="button" class="role-btn" data-role="student">Student</button>
+          </div>
+        </div>
+
+        <!-- Faculty Navigation -->
+        <nav class="sidebar-nav" id="facultyNav">
+          <div class="nav-group">
+            <span class="nav-group-label">Cohort Analytics</span>
+            <button type="button" class="nav-item active" data-view="overview">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+                <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+                <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+                <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+              </svg>
+              <span>Overview</span>
+            </button>
+            <button type="button" class="nav-item" data-view="students">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>Students</span>
+              <span class="nav-count tabular-nums" id="navStudentCount">0</span>
+            </button>
+            <button type="button" class="nav-item" data-view="attendance">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+                <path d="m9 16 2 2 4-4"></path>
+              </svg>
+              <span>Attendance Register</span>
+            </button>
+            <button type="button" class="nav-item" data-view="subjects">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 3v18h18"></path>
+                <path d="M18 17V9"></path>
+                <path d="M13 17V5"></path>
+                <path d="M8 17v-3"></path>
+              </svg>
+              <span>Subjects &amp; Branches</span>
+            </button>
+          </div>
+
+          <div class="nav-group">
+            <span class="nav-group-label">Mentorship &amp; Account</span>
+            <button type="button" class="nav-item" data-view="interventions">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <span>Intervention Queue</span>
+              <span class="nav-count nav-count-alert tabular-nums" id="navAlertCount">0</span>
+            </button>
+            <button type="button" class="nav-item" data-view="reports">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span>Reports &amp; CSV</span>
+            </button>
+            <button type="button" class="nav-item" data-view="profile">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Student Navigation -->
+        <nav class="sidebar-nav hidden" id="studentNav">
+          <div class="nav-group">
+            <span class="nav-group-label">My Academics</span>
+            <button type="button" class="nav-item active" data-view="student-dashboard">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+                <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+                <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+                <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+              </svg>
+              <span>My Dashboard</span>
+            </button>
+            <button type="button" class="nav-item" data-view="student-simulator">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1" y1="14" x2="7" y2="14"></line>
+                <line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+              </svg>
+              <span>CGPA Simulator</span>
+            </button>
+            <button type="button" class="nav-item" data-view="subjects">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 3v18h18"></path>
+                <path d="M18 17V9"></path>
+                <path d="M13 17V5"></path>
+                <path d="M8 17v-3"></path>
+              </svg>
+              <span>Course Benchmarks</span>
+            </button>
+          </div>
+
+          <div class="nav-group">
+            <span class="nav-group-label">Records &amp; Profile</span>
+            <button type="button" class="nav-item" data-view="student-advising">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span>Grade Card &amp; Mentor</span>
+            </button>
+            <button type="button" class="nav-item" data-view="profile">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle color theme">
+            <svg class="nav-icon" id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <svg class="nav-icon hidden" id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+            <span id="themeToggleLabel">Dark theme</span>
+          </button>
+          <div class="sidebar-meta" id="sidebarPortalMeta">
+            <span>Office of Academic Affairs · CBCS</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Workspace -->
+      <div class="workspace">
+        <!-- Top Header Bar -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation menu">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+              <span class="crumb-muted" id="breadcrumbPortal">Faculty Portal</span>
+              <span class="crumb-sep" aria-hidden="true">/</span>
+              <span class="crumb-muted" id="breadcrumbTerm">All Semesters</span>
+              <span class="crumb-sep" aria-hidden="true">/</span>
+              <span class="crumb-current" id="breadcrumbView">Overview</span>
+            </nav>
+          </div>
+
+          <div class="topbar-actions">
+            <button type="button" class="btn btn-secondary" id="openMarkAttendanceBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <path d="m9 16 2 2 4-4"></path>
+              </svg>
+              <span>Mark Attendance</span>
+            </button>
+            <button type="button" class="btn btn-primary" id="openAddStudentBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Add Student</span>
+            </button>
+
+            <button type="button" class="btn btn-secondary hidden" id="studentPrintBtn">
+              <span>Print Grade Card</span>
+            </button>
+
+            <!-- Multipurpose Profile Trigger & Popover -->
+            <div class="profile-menu-wrap">
+              <button
+                type="button"
+                class="profile-trigger"
+                id="profileTriggerBtn"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-controls="profilePopover"
+              >
+                <span class="profile-avatar-frame" id="topProfileAvatarFrame">
+                  <img
+                    src="./src/assets/images/avatar_indian_dean_1794732658457.jpg"
+                    alt="Dr. Meenakshi Sundaram profile photo"
+                    class="profile-photo"
+                    id="topProfilePhoto"
+                    referrerpolicy="no-referrer"
+                    onerror="this.classList.add('hidden'); document.getElementById('topProfileFallbackIcon').classList.remove('hidden');"
+                  />
+                  <svg class="profile-fallback-icon hidden" id="topProfileFallbackIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                <span class="profile-trigger-text">
+                  <span class="profile-trigger-name" id="topProfileName">Dr. Meenakshi Sundaram</span>
+                  <span class="profile-trigger-role" id="topProfileRole">Dean of Academics</span>
+                </span>
+                <svg class="profile-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              <div class="profile-popover hidden" id="profilePopover" role="dialog" aria-label="Account profile and workspace settings">
+                <div class="profile-popover-header">
+                  <span class="profile-avatar-frame avatar-md" id="popoverAvatarFrame">
+                    <img
+                      src="./src/assets/images/avatar_indian_dean_1794732658457.jpg"
+                      alt="Account profile photo"
+                      class="profile-photo"
+                      id="popoverProfilePhoto"
+                      referrerpolicy="no-referrer"
+                      onerror="this.classList.add('hidden'); document.getElementById('popoverFallbackIcon').classList.remove('hidden');"
+                    />
+                    <svg class="profile-fallback-icon hidden" id="popoverFallbackIcon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </span>
+                  <div class="popover-identity">
+                    <div class="popover-name" id="popoverProfileName">Dr. Meenakshi Sundaram</div>
+                    <div class="popover-meta" id="popoverProfileMeta">m.sundaram@nit-campus.ac.in · FAC-IN-408</div>
+                    <div class="popover-caseload tabular-nums" id="popoverCaseload">Assigned mentees: 0 students</div>
+                  </div>
+                </div>
+
+                <!-- Student Identity Switcher (visible in Student Role) -->
+                <div class="popover-section hidden" id="studentSwitchSection">
+                  <label for="activeStudentSelect" class="popover-section-title">Signed-in Student Account</label>
+                  <select id="activeStudentSelect" class="select-input"></select>
+                </div>
+
+                <!-- Faculty Alert Thresholds (visible in Faculty Role) -->
+                <form id="thresholdsForm" class="popover-section">
+                  <div class="popover-section-title">CBCS &amp; UGC Alert Thresholds</div>
+                  <div class="threshold-row">
+                    <label for="thresholdAlertScore">Alert Score Below (%)</label>
+                    <input type="number" id="thresholdAlertScore" class="score-num-input tabular-nums" min="25" max="75" required />
+                  </div>
+                  <div class="threshold-row">
+                    <label for="thresholdAlertAtt">UGC Attendance Below (%)</label>
+                    <input type="number" id="thresholdAlertAtt" class="score-num-input tabular-nums" min="50" max="95" required />
+                  </div>
+                  <div class="popover-actions">
+                    <button type="button" class="btn btn-ghost btn-sm" id="resetThresholdsBtn">Defaults</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+                  </div>
+                </form>
+
+                <div class="popover-footer">
+                  <button type="button" class="popover-link-btn" id="popoverOpenProfileBtn">View &amp; Edit My Profile</button>
+                  <button type="button" class="popover-link-btn" id="popoverSwitchRoleBtn">Switch to Student Portal</button>
+                  <button type="button" class="popover-link-btn" id="popoverOpenQueueBtn">Review Academic Alerts</button>
+                  <button type="button" class="popover-link-btn" id="popoverExportBtn">Download Cohort CSV</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Global Cohort Filter Toolbar (Faculty & Benchmarks) -->
+        <section class="filter-toolbar" id="cohortFilterToolbar" aria-label="Cohort filters">
+          <div class="filter-controls">
+            <div class="filter-field">
+              <label for="filterTerm" class="filter-label">Semester</label>
+              <select id="filterTerm" class="select-input">
+                <option value="all">All Semesters</option>
+                <option value="Odd Sem 2026">Odd Sem 2026</option>
+                <option value="Even Sem 2026">Even Sem 2026</option>
+                <option value="Odd Sem 2025">Odd Sem 2025</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label for="filterDepartment" class="filter-label">Department</label>
+              <select id="filterDepartment" class="select-input">
+                <option value="all">All Departments</option>
+                <option value="Computer Science &amp; Engg.">Computer Science &amp; Engg.</option>
+                <option value="Electronics &amp; Comm.">Electronics &amp; Comm.</option>
+                <option value="Mechanical Engg.">Mechanical Engg.</option>
+                <option value="Commerce &amp; Economics">Commerce &amp; Economics</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label for="filterStatus" class="filter-label">Standing</label>
+              <select id="filterStatus" class="select-input">
+                <option value="all">All Standings</option>
+                <option value="On Track">On Track</option>
+                <option value="Needs Review">Needs Review</option>
+                <option value="Academic Alert">Academic Alert</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm hidden" id="resetFiltersBtn">Reset filters</button>
+          </div>
+          <div class="filter-summary tabular-nums" id="filterSummary">
+            Showing 24 students
+          </div>
+        </section>
+
+        <!-- Student Context Bar (Student Portal Mode) -->
+        <section class="filter-toolbar hidden" id="studentContextToolbar" aria-label="Student account selector">
+          <div class="filter-controls">
+            <div class="filter-field">
+              <label for="toolbarStudentSelect" class="filter-label">Active Student Profile</label>
+              <select id="toolbarStudentSelect" class="select-input"></select>
+            </div>
+            <span class="student-context-meta tabular-nums" id="studentContextMeta"></span>
+          </div>
+          <div class="filter-summary" id="studentContextStanding"></div>
+        </section>
+
+        <!-- Main View Container -->
+        <main class="main-content" id="mainContent">
+          <!-- FACULTY VIEW 1: OVERVIEW -->
+          <section class="view-section active" id="view-overview" aria-labelledby="overviewHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="overviewHeading">Cohort Performance Overview</h1>
+                <p class="page-subtitle">CBCS 10.0 CGPA attainment, UGC 75% attendance compliance, and early-warning metrics.</p>
+              </div>
+              <div class="segmented-control" role="group" aria-label="Trend benchmark toggle">
+                <button type="button" class="segment-btn active" data-trend-mode="score">Score (%)</button>
+                <button type="button" class="segment-btn" data-trend-mode="cgpa">CGPA (10.0)</button>
+              </div>
+            </div>
+
+            <div class="kpi-grid" id="overviewKpis">
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">Mean Cohort CGPA</span>
+                  <span class="kpi-icon kpi-icon-accent" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20V10"></path>
+                      <path d="M18 20V4"></path>
+                      <path d="M6 20v-4"></path>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="kpiMeanCgpa">0.00</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-accent" id="meterMeanCgpa" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="kpiCgpaMeta">Median 0.00 · SD 0.00</div>
+              </article>
+
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">Pass Rate (&ge; 40%)</span>
+                  <span class="kpi-icon kpi-icon-nominal" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="kpiPassRate">0.0%</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-nominal" id="meterPassRate" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="kpiPassMeta">0 of 0 students passing</div>
+              </article>
+
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">Mean Attendance</span>
+                  <span class="kpi-icon kpi-icon-accent" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="kpiAttendance">0.0%</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-accent" id="meterAttendance" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="kpiCorrMeta">r = 0.00 score correlation</div>
+              </article>
+
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">Academic Alerts</span>
+                  <span class="kpi-icon kpi-icon-alert" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="kpiAlertCount">0</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-alert" id="meterAlertCount" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="kpiAlertMeta">Below 55% score or 75% UGC att.</div>
+              </article>
+            </div>
+
+            <article class="surface standing-strip">
+              <div class="standing-strip-head">
+                <span class="standing-strip-title">Cohort Standing Distribution</span>
+                <div class="standing-legend tabular-nums" id="standingLegend"></div>
+              </div>
+              <div class="standing-bar" id="standingBar" role="img" aria-label="Cohort standing breakdown"></div>
+            </article>
+
+            <!-- AI Cohort Insights Panel (Faculty) -->
+            <article class="surface panel ai-panel" id="cohortAiPanel" aria-labelledby="cohortAiHeading">
+              <div class="ai-panel-header">
+                <div class="ai-title-row">
+                  <span class="ai-icon-box" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"></path>
+                    </svg>
+                  </span>
+                  <div>
+                    <h2 class="panel-title" id="cohortAiHeading">AI Cohort Insights</h2>
+                    <p class="panel-subtitle" id="cohortAiSubtext">CBCS backlog diagnostics, branch gaps, and UGC 75% attendance guidance</p>
+                  </div>
+                </div>
+                <form class="ai-controls-form" id="cohortAiForm">
+                  <input
+                    type="text"
+                    id="cohortAiPromptInput"
+                    class="text-input ai-prompt-input"
+                    placeholder="Optional focus (e.g. backlog risks, CSE vs ME, attendance)..."
+                    aria-label="Optional AI focus question for cohort"
+                  />
+                  <button type="submit" class="btn btn-primary btn-sm" id="generateCohortAiBtn">Generate Insights</button>
+                </form>
+              </div>
+              <div class="ai-body" id="cohortAiBody">
+                <div class="ai-placeholder">
+                  Click <strong>Generate Insights</strong> to analyze the active filtered cohort for CBCS arrear patterns, subject bottlenecks, and urgent faculty mentoring priorities.
+                </div>
+              </div>
+            </article>
+
+            <div class="charts-grid-2">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Semester Assessment Trajectory</h2>
+                    <p class="panel-subtitle">Cohort mean across CIA 1, Mid-Sem, Lab / Viva &amp; End-Sem vs. target</p>
+                  </div>
+                  <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-swatch swatch-primary"></span>Cohort Mean</span>
+                    <span class="legend-item"><span class="legend-swatch swatch-muted"></span>Target</span>
+                  </div>
+                </div>
+                <div class="chart-container" id="trendChartContainer">
+                  <svg id="trendChartSvg" class="svg-chart" role="img" aria-label="Assessment trajectory line chart"></svg>
+                  <div class="chart-tooltip hidden" id="trendTooltip"></div>
+                </div>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">CBCS Grade Distribution</h2>
+                    <p class="panel-subtitle">Grades O through F · Click any bar to filter the cohort</p>
+                  </div>
+                  <button type="button" class="btn btn-text hidden" id="clearGradeFilterBtn">Clear grade filter</button>
+                </div>
+                <div class="chart-container" id="gradeChartContainer">
+                  <svg id="gradeChartSvg" class="svg-chart" role="img" aria-label="CBCS grade distribution bar chart"></svg>
+                  <div class="chart-tooltip hidden" id="gradeTooltip"></div>
+                </div>
+              </article>
+            </div>
+
+            <div class="charts-grid-asymmetric">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Attendance vs. Aggregate Marks</h2>
+                    <p class="panel-subtitle" id="scatterSubtitle">Linear regression fit · 75% UGC exam eligibility norm · Click point to inspect</p>
+                  </div>
+                  <div class="mono-stat tabular-nums" id="regressionFormula">y = 0.00x + 0.0</div>
+                </div>
+                <div class="chart-container chart-tall" id="scatterChartContainer">
+                  <canvas id="scatterCanvas" class="canvas-chart" aria-label="Attendance versus aggregate score scatter plot"></canvas>
+                  <div class="chart-tooltip hidden" id="scatterTooltip"></div>
+                </div>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Priority Watchlist</h2>
+                    <p class="panel-subtitle">Students with backlog risk or UGC attendance shortage</p>
+                  </div>
+                  <button type="button" class="btn btn-text" id="viewAllAlertsBtn">Open queue</button>
+                </div>
+                <div class="watchlist-container" id="watchlistContainer"></div>
+              </article>
+            </div>
+          </section>
+
+          <!-- FACULTY VIEW 2: STUDENTS ROSTER -->
+          <section class="view-section" id="view-students" aria-labelledby="studentsHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="studentsHeading">Student Roster</h1>
+                <p class="page-subtitle">Search, sort, and inspect individual CBCS scorecards and mentor records.</p>
+              </div>
+              <div class="toolbar-inline">
+                <div class="search-box">
+                  <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input
+                    type="search"
+                    id="studentSearchInput"
+                    class="search-input"
+                    placeholder="Search name, roll no, or branch..."
+                    aria-label="Search students"
+                  />
+                </div>
+                <button type="button" class="btn btn-secondary" id="exportCsvQuickBtn">Export CSV</button>
+              </div>
+            </div>
+
+            <article class="surface table-panel">
+              <div class="table-scroll">
+                <table class="data-table" id="studentsTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <button type="button" class="sort-btn" data-sort="id">Roll No <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col">
+                        <button type="button" class="sort-btn" data-sort="name">Student <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col">
+                        <button type="button" class="sort-btn" data-sort="department">Branch &amp; Sem <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col" class="num-col">
+                        <button type="button" class="sort-btn sort-right" data-sort="average">Aggregate <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col" class="num-col">
+                        <button type="button" class="sort-btn sort-right" data-sort="cgpa">CGPA <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col" class="num-col">
+                        <button type="button" class="sort-btn sort-right" data-sort="attendance">Attendance <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col" class="num-col">
+                        <button type="button" class="sort-btn sort-right" data-sort="completion">CIA Tasks <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col">
+                        <button type="button" class="sort-btn" data-sort="status">Standing <span class="sort-indicator"></span></button>
+                      </th>
+                      <th scope="col" class="action-col">Record</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studentsTableBody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state hidden" id="studentsEmptyState">
+                <h3 class="empty-title">No matching students found</h3>
+                <p class="empty-desc">Try clearing your search query or adjusting the semester and department filters.</p>
+                <button type="button" class="btn btn-secondary" id="emptyResetBtn">Reset all filters</button>
+              </div>
+            </article>
+          </section>
+
+          <!-- SHARED VIEW 3: SUBJECTS & BRANCHES -->
+          <section class="view-section" id="view-subjects" aria-labelledby="subjectsHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="subjectsHeading">Subjects &amp; Department Benchmarks</h1>
+                <p class="page-subtitle">Course-level score dispersion, 40% pass thresholds, and departmental CGPA comparisons.</p>
+              </div>
+            </div>
+
+            <div class="charts-grid-2">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Subject Score Dispersion</h2>
+                    <p class="panel-subtitle">Mean marker within cohort min–max range (vertical line indicates 75% distinction)</p>
+                  </div>
+                </div>
+                <div class="subject-bars-list" id="subjectBenchmarkList"></div>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Departmental Comparison</h2>
+                    <p class="panel-subtitle">Mean CGPA (10.0), attendance, and alert rate by engineering &amp; commerce branch</p>
+                  </div>
+                </div>
+                <div class="table-scroll">
+                  <table class="data-table compact-table" id="departmentTable">
+                    <thead>
+                      <tr>
+                        <th scope="col">Department</th>
+                        <th scope="col" class="num-col">Students</th>
+                        <th scope="col" class="num-col">Mean Score</th>
+                        <th scope="col" class="num-col">Mean CGPA</th>
+                        <th scope="col" class="num-col">Attendance</th>
+                        <th scope="col" class="num-col">Alert Rate</th>
+                      </tr>
+                    </thead>
+                    <tbody id="departmentTableBody"></tbody>
+                  </table>
+                </div>
+              </article>
+            </div>
+
+            <article class="surface panel">
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">Course Matrix Breakdown</h2>
+                  <p class="panel-subtitle">Statistical summary (Mean, Median, Std Dev, Pass Rate &ge; 40%) per CBCS subject</p>
+                </div>
+              </div>
+              <div class="table-scroll">
+                <table class="data-table" id="subjectStatsTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Subject</th>
+                      <th scope="col" class="num-col">Mean</th>
+                      <th scope="col" class="num-col">Median</th>
+                      <th scope="col" class="num-col">Std Dev</th>
+                      <th scope="col" class="num-col">Min</th>
+                      <th scope="col" class="num-col">Max</th>
+                      <th scope="col" class="num-col">Pass Rate (&ge; 40%)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="subjectStatsBody"></tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <!-- FACULTY VIEW 4: INTERVENTION QUEUE -->
+          <section class="view-section" id="view-interventions" aria-labelledby="interventionsHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="interventionsHeading">Academic Intervention Queue</h1>
+                <p class="page-subtitle" id="interventionsSubtitle">Students flagged below active score, arrear/backlog, or 75% UGC attendance thresholds.</p>
+              </div>
+              <div class="segmented-control" role="group" aria-label="Intervention filter">
+                <button type="button" class="segment-btn active" data-queue-filter="flagged">Flagged Only</button>
+                <button type="button" class="segment-btn" data-queue-filter="resolved">With Mentor Notes</button>
+              </div>
+            </div>
+
+            <div class="intervention-grid" id="interventionQueueList"></div>
+          </section>
+
+          <!-- FACULTY VIEW 4B: ATTENDANCE REGISTER (COLLECTION) -->
+          <section class="view-section" id="view-attendance" aria-labelledby="attendanceHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="attendanceHeading">Daily Attendance Register</h1>
+                <p class="page-subtitle">Collect lecture-wise roll call (Present, Absent, On-Duty) and automatically recalculate UGC 75% compliance.</p>
+              </div>
+              <div class="toolbar-inline">
+                <button type="button" class="btn btn-secondary" id="markAllPresentBtn">Mark All Present</button>
+                <button type="button" class="btn btn-primary" id="saveAttendanceRegisterBtn">Save Attendance Register</button>
+              </div>
+            </div>
+
+            <!-- Session Configuration Card -->
+            <article class="surface panel">
+              <div class="attendance-session-grid">
+                <div class="form-group">
+                  <label for="attSessionDate">Lecture Date</label>
+                  <input type="date" id="attSessionDate" class="text-input tabular-nums" required />
+                </div>
+                <div class="form-group">
+                  <label for="attSessionSubject">Subject / Practical</label>
+                  <select id="attSessionSubject" class="select-input">
+                    <option value="dsa">Data Structures</option>
+                    <option value="maths">Engg. Mathematics</option>
+                    <option value="dbms">Database Systems</option>
+                    <option value="comm">Professional Comm.</option>
+                    <option value="lab">Practical Lab</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="attSessionDept">Department / Branch</label>
+                  <select id="attSessionDept" class="select-input">
+                    <option value="all">All Departments</option>
+                    <option value="Computer Science &amp; Engg.">Computer Science &amp; Engg.</option>
+                    <option value="Electronics &amp; Comm.">Electronics &amp; Comm.</option>
+                    <option value="Mechanical Engg.">Mechanical Engg.</option>
+                    <option value="Commerce &amp; Economics">Commerce &amp; Economics</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="attSessionTerm">Semester</label>
+                  <select id="attSessionTerm" class="select-input">
+                    <option value="all">All Semesters</option>
+                    <option value="Odd Sem 2026">Odd Sem 2026</option>
+                    <option value="Even Sem 2026">Even Sem 2026</option>
+                    <option value="Odd Sem 2025">Odd Sem 2025</option>
+                  </select>
+                </div>
+              </div>
+              <div class="attendance-summary-strip" id="attSessionSummaryStrip"></div>
+            </article>
+
+            <!-- Roll Call Table -->
+            <article class="surface table-panel">
+              <div class="table-scroll">
+                <table class="data-table" id="attendanceRegisterTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Roll No</th>
+                      <th scope="col">Student</th>
+                      <th scope="col">Branch &amp; Sem</th>
+                      <th scope="col" class="num-col">Classes</th>
+                      <th scope="col" class="num-col">Overall %</th>
+                      <th scope="col">UGC Status</th>
+                      <th scope="col" class="action-col">Mark Attendance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="attendanceRegisterBody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state hidden" id="attendanceEmptyState">
+                <h3 class="empty-title">No students in selected branch or semester</h3>
+                <p class="empty-desc">Choose another department or semester filter above to load the roll call.</p>
+              </div>
+            </article>
+
+            <!-- Saved Registers History -->
+            <article class="surface panel">
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">Recent Saved Attendance Registers</h2>
+                  <p class="panel-subtitle">Click a saved session to reload or edit its roll call without double-counting</p>
+                </div>
+              </div>
+              <ul class="notes-list" id="attendanceHistoryList"></ul>
+            </article>
+          </section>
+
+          <!-- FACULTY VIEW 5: REPORTS & CSV -->
+          <section class="view-section" id="view-reports" aria-labelledby="reportsHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="reportsHeading">Reports &amp; Data Management</h1>
+                <p class="page-subtitle">Import CSV rosters, export filtered CBCS datasets, or print executive reports.</p>
+              </div>
+            </div>
+
+            <div class="charts-grid-2">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Import Student CSV</h2>
+                    <p class="panel-subtitle">Upload a CSV file matching the ScholaMetrics Indian CBCS schema to append or update records</p>
+                  </div>
+                </div>
+                <div class="dropzone" id="csvDropzone" tabindex="0" role="button" aria-label="Upload CSV file">
+                  <input type="file" id="csvFileInput" accept=".csv,text/csv" class="hidden-input" />
+                  <div class="dropzone-icon-wrap" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                  </div>
+                  <p class="dropzone-title">Drop a .csv file here or click to browse</p>
+                  <p class="dropzone-hint">Columns: rollNo, name, email, department, term, attendance, completion, dsa, maths, dbms, comm, lab</p>
+                </div>
+                <div class="report-actions-row">
+                  <button type="button" class="btn btn-secondary" id="downloadTemplateBtn">Download CSV Template</button>
+                </div>
+                <div class="import-feedback hidden" id="importFeedback" role="status"></div>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Export &amp; Workspace Actions</h2>
+                    <p class="panel-subtitle">Download current filtered views or reset local browser storage</p>
+                  </div>
+                </div>
+                <div class="action-stack">
+                  <div class="action-row">
+                    <div>
+                      <div class="action-row-title">Export Filtered Roster (CSV)</div>
+                      <div class="action-row-desc">Downloads all students matching current semester, department, and standing filters.</div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="exportCsvBtn">Download CSV</button>
+                  </div>
+                  <div class="action-row">
+                    <div>
+                      <div class="action-row-title">Printable Executive Summary</div>
+                      <div class="action-row-desc">Formats the active cohort overview and KPIs for PDF or physical printing.</div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="printReportBtn">Print Summary</button>
+                  </div>
+                  <div class="action-row">
+                    <div>
+                      <div class="action-row-title">Restore Sample Dataset</div>
+                      <div class="action-row-desc">Resets localStorage back to the default 24-student Indian university dataset.</div>
+                    </div>
+                    <button type="button" class="btn btn-danger-outline" id="resetSampleDataBtn">Reset Data</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- STUDENT PORTAL VIEW 1: MY DASHBOARD -->
+          <section class="view-section" id="view-student-dashboard" aria-labelledby="studentDashHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="studentDashHeading">My Academic Dashboard</h1>
+                <p class="page-subtitle" id="studentDashSubtitle">Personal 10.0 CGPA, course mastery versus cohort benchmarks, and CIA-to-End-Sem trajectory.</p>
+              </div>
+              <button type="button" class="btn btn-secondary" id="openSimulatorFromDashBtn">Launch CGPA Simulator</button>
+            </div>
+
+            <div class="kpi-grid">
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">My Semester CGPA</span>
+                  <span class="kpi-icon kpi-icon-accent" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20V10"></path>
+                      <path d="M18 20V4"></path>
+                      <path d="M6 20v-4"></path>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="stuKpiCgpa">0.00</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-accent" id="stuMeterCgpa" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="stuKpiCgpaDelta">vs 0.00 cohort mean</div>
+              </article>
+
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">Aggregate Marks</span>
+                  <span class="kpi-icon kpi-icon-nominal" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="stuKpiScore">0.0%</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-nominal" id="stuMeterScore" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="stuKpiPercentile">0th cohort percentile</div>
+              </article>
+
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">My Attendance</span>
+                  <span class="kpi-icon kpi-icon-accent" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="stuKpiAttendance">0%</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-accent" id="stuMeterAttendance" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="stuKpiAttendanceMeta">Minimum UGC norm: 75%</div>
+              </article>
+
+              <article class="surface kpi-card">
+                <div class="kpi-head">
+                  <span class="kpi-label">CIA &amp; Lab Completion</span>
+                  <span class="kpi-icon kpi-icon-nominal" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 11l3 3L22 4"></path>
+                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                  </span>
+                </div>
+                <div class="kpi-value tabular-nums" id="stuKpiCompletion">0%</div>
+                <div class="kpi-meter" aria-hidden="true">
+                  <div class="kpi-meter-fill meter-nominal" id="stuMeterCompletion" style="width: 0%;"></div>
+                </div>
+                <div class="kpi-meta tabular-nums" id="stuKpiCredits">20 enrolled credits</div>
+              </article>
+            </div>
+
+            <!-- AI Study Coach Panel (Student Portal) -->
+            <article class="surface panel ai-panel" id="studentAiPanel" aria-labelledby="studentAiHeading">
+              <div class="ai-panel-header">
+                <div class="ai-title-row">
+                  <span class="ai-icon-box" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"></path>
+                    </svg>
+                  </span>
+                  <div>
+                    <h2 class="panel-title" id="studentAiHeading">AI Study &amp; Attendance Coach</h2>
+                    <p class="panel-subtitle" id="studentAiSubtext">Personalized 10.0 CGPA improvement plan and UGC 75% eligibility check</p>
+                  </div>
+                </div>
+                <form class="ai-controls-form" id="studentAiForm">
+                  <input
+                    type="text"
+                    id="studentAiPromptInput"
+                    class="text-input ai-prompt-input"
+                    placeholder="Ask or set a target (e.g. Reach 8.5 CGPA, fix attendance)..."
+                    aria-label="Optional goal or question for AI Study Coach"
+                  />
+                  <button type="submit" class="btn btn-primary btn-sm" id="generateStudentAiBtn">Analyze My Performance</button>
+                </form>
+              </div>
+              <div class="ai-body" id="studentAiBody">
+                <div class="ai-placeholder">
+                  Click <strong>Analyze My Performance</strong> for a personalized subject-by-subject study plan, backlog prevention check, and End-Sem target roadmap.
+                </div>
+              </div>
+            </article>
+
+            <div class="charts-grid-2">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">My Courses vs. Cohort Average</h2>
+                    <p class="panel-subtitle">Solid bar shows your score; vertical marker indicates batch average</p>
+                  </div>
+                </div>
+                <div class="subject-bars-list" id="studentVsCohortList"></div>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">My Assessment Trajectory</h2>
+                    <p class="panel-subtitle">CIA 1, Mid-Sem, Lab / Viva &amp; End-Sem progression vs. target</p>
+                  </div>
+                  <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-swatch swatch-primary"></span>My Score</span>
+                    <span class="legend-item"><span class="legend-swatch swatch-muted"></span>Target</span>
+                  </div>
+                </div>
+                <div class="chart-container" id="studentTrendContainer">
+                  <svg id="studentTrendSvg" class="svg-chart" role="img" aria-label="Student milestone progression chart"></svg>
+                  <div class="chart-tooltip hidden" id="studentTrendTooltip"></div>
+                </div>
+              </article>
+            </div>
+
+            <div class="charts-grid-2">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">CBCS &amp; Exam Eligibility Diagnostics</h2>
+                    <p class="panel-subtitle">Automated evaluation against pass marks (40%) and 75% UGC norm</p>
+                  </div>
+                  <div id="stuDashStandingBadge"></div>
+                </div>
+                <ul class="diagnostics-list" id="stuDashDiagnostics"></ul>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Recent Mentor &amp; Study Notes</h2>
+                    <p class="panel-subtitle">Feedback from your faculty mentor and self-logged goals</p>
+                  </div>
+                  <button type="button" class="btn btn-text" id="openAdvisingFromDashBtn">Log reflection</button>
+                </div>
+                <ul class="notes-list" id="stuDashNotes"></ul>
+              </article>
+            </div>
+          </section>
+
+          <!-- STUDENT PORTAL VIEW 2: CGPA & GRADE SIMULATOR -->
+          <section class="view-section" id="view-student-simulator" aria-labelledby="simulatorHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="simulatorHeading">What-If CGPA &amp; Grade Simulator</h1>
+                <p class="page-subtitle">Adjust projected course marks and attendance to preview your 10.0 CGPA, CBCS grade, and exam eligibility.</p>
+              </div>
+              <button type="button" class="btn btn-secondary" id="resetSimulatorBtn">Reset to Current Marks</button>
+            </div>
+
+            <div class="charts-grid-asymmetric">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Projected Course &amp; Attendance Inputs</h2>
+                    <p class="panel-subtitle">Drag sliders or enter target marks (simulation only — does not overwrite official records)</p>
+                  </div>
+                </div>
+                <div class="simulator-sliders" id="simulatorInputsContainer"></div>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Simulated CBCS Outcome</h2>
+                    <p class="panel-subtitle">Live comparison against your current academic standing</p>
+                  </div>
+                </div>
+                <div class="sim-results-grid">
+                  <div class="sim-metric-box">
+                    <span class="sim-metric-label">Projected CGPA</span>
+                    <span class="sim-metric-val tabular-nums" id="simCgpa">0.00</span>
+                    <span class="sim-metric-delta tabular-nums" id="simCgpaDelta">+0.00</span>
+                  </div>
+                  <div class="sim-metric-box">
+                    <span class="sim-metric-label">Aggregate (%)</span>
+                    <span class="sim-metric-val tabular-nums" id="simAvg">0.0%</span>
+                    <span class="sim-metric-delta tabular-nums" id="simAvgDelta">+0.0%</span>
+                  </div>
+                  <div class="sim-metric-box">
+                    <span class="sim-metric-label">CBCS Grade</span>
+                    <span class="sim-metric-val tabular-nums" id="simLetter">A</span>
+                    <span class="sim-metric-delta tabular-nums" id="simPercentile">0th pct</span>
+                  </div>
+                </div>
+                <div class="sim-standing-row">
+                  <span>Projected Standing</span>
+                  <div id="simStandingBadge"></div>
+                </div>
+                <div class="sim-advice" id="simAdviceText"></div>
+              </article>
+            </div>
+          </section>
+
+          <!-- STUDENT PORTAL VIEW 3: GRADE CARD & MENTOR LOG -->
+          <section class="view-section" id="view-student-advising" aria-labelledby="studentAdvisingHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="studentAdvisingHeading">Semester Grade Card &amp; Mentorship</h1>
+                <p class="page-subtitle">CBCS subject-by-subject credit breakdown, grade points, and shared mentor log.</p>
+              </div>
+            </div>
+
+            <article class="surface table-panel">
+              <div class="table-scroll">
+                <table class="data-table" id="studentTranscriptTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Course Subject</th>
+                      <th scope="col" class="num-col">Credits</th>
+                      <th scope="col" class="num-col">Marks (%)</th>
+                      <th scope="col" class="num-col">CBCS Grade</th>
+                      <th scope="col" class="num-col">Grade Points</th>
+                      <th scope="col" class="num-col">Batch Mean</th>
+                      <th scope="col">Result Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studentTranscriptBody"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <div class="charts-grid-2">
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Submit Study Plan or Mentor Request</h2>
+                    <p class="panel-subtitle">Entries appear immediately in your faculty mentor's advising log</p>
+                  </div>
+                </div>
+                <form id="studentSelfLogForm" class="note-form">
+                  <select id="studentSelfActionSelect" class="select-input">
+                    <option value="Student Check-In Request">Request 1:1 Mentor Check-In</option>
+                    <option value="Remedial Class Request">Request Remedial Tutorial</option>
+                    <option value="Medical / Duty Condonation">Submit Attendance Condonation Note</option>
+                    <option value="Student Study Goal">Log Personal Study Goal</option>
+                  </select>
+                  <textarea
+                    id="studentSelfNoteInput"
+                    class="textarea-input"
+                    rows="3"
+                    placeholder="Describe your study target, attendance clarification, or question for your faculty mentor..."
+                    required
+                  ></textarea>
+                  <div class="note-form-row">
+                    <span></span>
+                    <button type="submit" class="btn btn-primary btn-sm">Submit to Mentor Log</button>
+                  </div>
+                </form>
+              </article>
+
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title">Mentorship &amp; Reflection History</h2>
+                    <p class="panel-subtitle">Shared timeline between you and your assigned faculty mentor</p>
+                  </div>
+                </div>
+                <ul class="notes-list" id="studentAdvisingHistoryList"></ul>
+              </article>
+            </div>
+
+            <article class="surface panel">
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">My Recorded Attendance Sessions</h2>
+                  <p class="panel-subtitle" id="studentAttLogSummary">Lecture-wise roll-call records logged by faculty mentors</p>
+                </div>
+              </div>
+              <ul class="notes-list" id="studentAttendanceLogList"></ul>
+            </article>
+          </section>
+
+          <!-- SHARED VIEW: MY PROFILE (FACULTY & STUDENT) -->
+          <section class="view-section" id="view-profile" aria-labelledby="profileHeading">
+            <div class="section-header-row">
+              <div>
+                <h1 class="page-title" id="profileHeading">My Profile &amp; Academic Credentials</h1>
+                <p class="page-subtitle" id="profileSubtitle">Manage your institutional identity, contact details, and CBCS governance settings.</p>
+              </div>
+              <div class="toolbar-inline">
+                <button type="button" class="btn btn-secondary" id="profileSwitchRoleBtn">Switch to Student Portal</button>
+              </div>
+            </div>
+
+            <!-- Profile Identity Hero Card -->
+            <article class="surface profile-hero-card">
+              <div class="profile-hero-main">
+                <div class="profile-hero-avatar-wrap">
+                  <img
+                    src="./src/assets/images/avatar_indian_dean_1794732658457.jpg"
+                    alt="Profile portrait"
+                    class="profile-hero-img"
+                    id="profileHeroPhoto"
+                    referrerpolicy="no-referrer"
+                    onerror="this.classList.add('hidden'); document.getElementById('profileHeroFallback').classList.remove('hidden');"
+                  />
+                  <svg class="profile-hero-fallback hidden" id="profileHeroFallback" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div class="profile-hero-info">
+                  <div class="profile-hero-top">
+                    <div>
+                      <div class="profile-hero-kicker tabular-nums" id="profileHeroKicker">FAC-IN-408 · Computer Science &amp; Engg.</div>
+                      <h2 class="profile-hero-name" id="profileHeroName">Dr. Meenakshi Sundaram</h2>
+                      <div class="profile-hero-designation" id="profileHeroDesignation">Dean of Academics · Academic Block A, Room 214</div>
+                    </div>
+                    <div id="profileHeroStatus"></div>
+                  </div>
+                  <p class="profile-hero-bio" id="profileHeroBio">
+                    Overseeing undergraduate CBCS academic progression, early-warning mentorship, and UGC 75% attendance compliance.
+                  </p>
+                  <div class="profile-meta-row">
+                    <div class="profile-meta-item">
+                      <span class="profile-meta-label">Campus Email</span>
+                      <span class="profile-meta-value" id="profileMetaEmail">m.sundaram@nit-campus.ac.in</span>
+                    </div>
+                    <div class="profile-meta-item">
+                      <span class="profile-meta-label" id="profileMetaSlot2Label">Office Hours</span>
+                      <span class="profile-meta-value" id="profileMetaSlot2Val">Mon–Fri · 2:30 PM – 4:30 PM IST</span>
+                    </div>
+                    <div class="profile-meta-item">
+                      <span class="profile-meta-label" id="profileMetaSlot3Label">Regulation</span>
+                      <span class="profile-meta-value" id="profileMetaSlot3Val">CBCS 10.0 · UGC 75% Norm</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <div class="charts-grid-asymmetric">
+              <!-- Editable Profile Details Form -->
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title" id="profileFormTitle">Edit Institutional Profile</h2>
+                    <p class="panel-subtitle" id="profileFormSubtitle">Updates sync immediately across the portal header and advising records</p>
+                  </div>
+                </div>
+                <form id="profileEditForm" class="profile-form-grid">
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="profNameInput">Full Name</label>
+                      <input type="text" id="profNameInput" class="text-input" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="profEmailInput">Campus Email (.ac.in)</label>
+                      <input type="email" id="profEmailInput" class="text-input" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="profDeptSelect">Department / Branch</label>
+                      <select id="profDeptSelect" class="select-input">
+                        <option value="Computer Science &amp; Engg.">Computer Science &amp; Engg.</option>
+                        <option value="Electronics &amp; Comm.">Electronics &amp; Comm.</option>
+                        <option value="Mechanical Engg.">Mechanical Engg.</option>
+                        <option value="Commerce &amp; Economics">Commerce &amp; Economics</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="profSecondaryInput" id="profSecondaryLabel">Designation / Title</label>
+                      <input type="text" id="profSecondaryInput" class="text-input" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="profTertiaryInput" id="profTertiaryLabel">Cabin / Office Location</label>
+                      <input type="text" id="profTertiaryInput" class="text-input" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="profQuaternaryInput" id="profQuaternaryLabel">Mentorship Hours</label>
+                      <input type="text" id="profQuaternaryInput" class="text-input" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="profBioInput" id="profBioLabel">Academic Bio / Mentorship Focus</label>
+                    <textarea id="profBioInput" class="textarea-input" rows="2"></textarea>
+                  </div>
+                  <div class="profile-form-footer">
+                    <span class="save-confirm hidden" id="profileSaveConfirm">Profile saved</span>
+                    <button type="submit" class="btn btn-primary btn-sm">Save Profile Changes</button>
+                  </div>
+                </form>
+              </article>
+
+              <!-- Role-Specific Summary & Governance Panel -->
+              <article class="surface panel">
+                <div class="panel-header">
+                  <div>
+                    <h2 class="panel-title" id="profileSideTitle">Mentorship &amp; CBCS Governance</h2>
+                    <p class="panel-subtitle" id="profileSideSubtitle">Live caseload snapshot and institution-wide compliance rules</p>
+                  </div>
+                </div>
+
+                <!-- Faculty Caseload + Thresholds -->
+                <div id="profileFacultyBox" class="profile-side-stack">
+                  <div class="profile-stats-grid" id="profileFacultyStats"></div>
+                  <form id="profileThresholdsForm" class="profile-thresholds-box">
+                    <div class="popover-section-title">CBCS &amp; UGC Regulation Thresholds</div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label for="profThresholdPass">Minimum Pass Marks (%)</label>
+                        <input type="number" id="profThresholdPass" class="text-input tabular-nums" min="30" max="55" required />
+                      </div>
+                      <div class="form-group">
+                        <label for="profThresholdAlertScore">Alert Aggregate Below (%)</label>
+                        <input type="number" id="profThresholdAlertScore" class="text-input tabular-nums" min="35" max="75" required />
+                      </div>
+                      <div class="form-group">
+                        <label for="profThresholdAlertAtt">UGC Attendance Norm (%)</label>
+                        <input type="number" id="profThresholdAlertAtt" class="text-input tabular-nums" min="60" max="90" required />
+                      </div>
+                      <div class="form-group">
+                        <label for="profThresholdReviewScore">Merit Review Below (%)</label>
+                        <input type="number" id="profThresholdReviewScore" class="text-input tabular-nums" min="50" max="85" required />
+                      </div>
+                    </div>
+                    <div class="profile-form-footer">
+                      <button type="button" class="btn btn-ghost btn-sm" id="profResetThresholdsBtn">Restore Defaults</button>
+                      <button type="submit" class="btn btn-secondary btn-sm">Update Rules</button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Student Snapshot + Switcher -->
+                <div id="profileStudentBox" class="profile-side-stack hidden">
+                  <div class="form-group">
+                    <label for="profileStudentSelect">Switch Active Student Profile</label>
+                    <select id="profileStudentSelect" class="select-input"></select>
+                  </div>
+                  <div class="profile-stats-grid" id="profileStudentStats"></div>
+                  <div class="diagnostics-list" id="profileStudentEligibilityBox"></div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Student Detail Slide-Over Drawer (Faculty View) -->
+    <div class="drawer-overlay" id="studentDrawerOverlay" aria-hidden="true"></div>
+    <aside class="drawer" id="studentDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerStudentName" aria-hidden="true">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <div class="student-profile-badge badge-lg" id="drawerAvatar" aria-hidden="true"></div>
+          <div>
+            <div class="drawer-kicker tabular-nums" id="drawerStudentMeta">24CSE101 · Computer Science &amp; Engg.</div>
+            <h2 class="drawer-title" id="drawerStudentName">Student Name</h2>
+            <div class="drawer-submeta" id="drawerSubMeta">3rd Year · 22 Credits · Mentor: Dr. Meenakshi Sundaram</div>
+          </div>
+        </div>
+        <button type="button" class="icon-btn" id="closeDrawerBtn" aria-label="Close student profile">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="drawer-kpi-row">
+          <div class="drawer-stat">
+            <span class="drawer-stat-label">CGPA</span>
+            <span class="drawer-stat-val tabular-nums" id="drawerCgpa">0.00</span>
+          </div>
+          <div class="drawer-stat">
+            <span class="drawer-stat-label">Aggregate</span>
+            <span class="drawer-stat-val tabular-nums" id="drawerAvg">0.0%</span>
+          </div>
+          <div class="drawer-stat">
+            <span class="drawer-stat-label">Attendance</span>
+            <span class="drawer-stat-val tabular-nums" id="drawerAttendance">0%</span>
+          </div>
+          <div class="drawer-stat">
+            <span class="drawer-stat-label">Percentile</span>
+            <span class="drawer-stat-val tabular-nums" id="drawerPercentile">0th</span>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <div class="drawer-section-head">
+            <h3>Standing &amp; Eligibility Risks</h3>
+            <span class="drawer-standing" id="drawerStanding">On Track</span>
+          </div>
+          <ul class="diagnostics-list" id="drawerDiagnosticsList"></ul>
+        </div>
+
+        <div class="drawer-section">
+          <div class="drawer-section-head">
+            <h3>Semester Assessment Progression</h3>
+            <span class="drawer-kicker tabular-nums" id="drawerLastActive">Last LMS activity: Today</span>
+          </div>
+          <div class="sparkline-box">
+            <svg id="drawerSparklineSvg" class="sparkline-svg" viewBox="0 0 420 84" role="img" aria-label="Student milestone progression"></svg>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <h3>CBCS Marks &amp; Attendance (Editable)</h3>
+          <form id="drawerScoresForm" class="score-edit-grid"></form>
+          <div class="drawer-form-actions">
+            <button type="submit" form="drawerScoresForm" class="btn btn-primary btn-sm">Save Marks &amp; Attendance</button>
+            <span class="save-confirm hidden" id="drawerSaveConfirm">Saved</span>
+          </div>
+        </div>
+
+        <div class="drawer-section" id="drawerAiSection">
+          <div class="drawer-section-head">
+            <h3>AI Mentor Brief</h3>
+            <button type="button" class="btn btn-secondary btn-sm" id="generateDrawerAiBtn">Generate Brief</button>
+          </div>
+          <div class="ai-drawer-box" id="drawerAiBody">
+            <div class="ai-placeholder ai-placeholder-compact">
+              Generate a tailored 1:1 CBCS mentor brief and draft intervention note for this student.
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <h3>Mentor Intervention Log</h3>
+          <form id="advisorNoteForm" class="note-form">
+            <textarea
+              id="advisorNoteInput"
+              class="textarea-input"
+              rows="2"
+              placeholder="Record mentoring session summary, parent intimation, or remedial plan..."
+              required
+            ></textarea>
+            <div class="note-form-row">
+              <select id="advisorActionSelect" class="select-input">
+                <option value="Remedial Class Referral">Remedial Class Referral</option>
+                <option value="Mentor 1:1 Check-In">Mentor 1:1 Check-In</option>
+                <option value="Attendance Shortage Notice">Attendance Shortage Notice</option>
+                <option value="Merit Commendation">Merit Commendation</option>
+              </select>
+              <button type="submit" class="btn btn-secondary btn-sm">Log Note</button>
+            </div>
+          </form>
+          <ul class="notes-list" id="drawerNotesList"></ul>
+        </div>
+
+        <div class="drawer-danger-zone">
+          <button type="button" class="btn btn-danger-outline btn-sm" id="deleteStudentBtn">Remove Student Record</button>
+          <div class="confirm-delete hidden" id="confirmDeleteBox">
+            <span>Confirm permanent removal?</span>
+            <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteYesBtn">Remove</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="confirmDeleteNoBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Add Student Modal -->
+    <div class="modal-backdrop" id="addStudentModalBackdrop" aria-hidden="true"></div>
+    <div class="modal" id="addStudentModal" role="dialog" aria-modal="true" aria-labelledby="addStudentModalTitle" aria-hidden="true">
+      <div class="modal-header">
+        <h2 class="modal-title" id="addStudentModalTitle">Enroll Student Record</h2>
+        <button type="button" class="icon-btn" id="closeAddModalBtn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="addStudentForm" class="modal-body">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="newStudentName">Full Name</label>
+            <input type="text" id="newStudentName" class="text-input" placeholder="e.g., Ishaan Malhotra" required />
+          </div>
+          <div class="form-group">
+            <label for="newStudentRollNo">University Roll No (Optional)</label>
+            <input type="text" id="newStudentRollNo" class="text-input tabular-nums" placeholder="Auto-generated e.g. 24CSE125" />
+          </div>
+          <div class="form-group">
+            <label for="newStudentEmail">Campus Email (.ac.in)</label>
+            <input type="email" id="newStudentEmail" class="text-input" placeholder="ishaan.m@nit-campus.ac.in" required />
+          </div>
+          <div class="form-group">
+            <label for="newStudentDept">Department / Branch</label>
+            <select id="newStudentDept" class="select-input">
+              <option value="Computer Science &amp; Engg.">Computer Science &amp; Engg.</option>
+              <option value="Electronics &amp; Comm.">Electronics &amp; Comm.</option>
+              <option value="Mechanical Engg.">Mechanical Engg.</option>
+              <option value="Commerce &amp; Economics">Commerce &amp; Economics</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newStudentTerm">Semester</label>
+            <select id="newStudentTerm" class="select-input">
+              <option value="Odd Sem 2026">Odd Sem 2026</option>
+              <option value="Even Sem 2026">Even Sem 2026</option>
+              <option value="Odd Sem 2025">Odd Sem 2025</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newStudentYear">Year of Study</label>
+            <select id="newStudentYear" class="select-input">
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year" selected>2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newStudentCredits">CBCS Credits</label>
+            <input type="number" id="newStudentCredits" class="text-input tabular-nums" min="4" max="28" value="20" required />
+          </div>
+          <div class="form-group">
+            <label for="newStudentAttendance">Attendance (%)</label>
+            <input type="number" id="newStudentAttendance" class="text-input tabular-nums" min="0" max="100" value="88" required />
+          </div>
+          <div class="form-group">
+            <label for="newStudentCompletion">CIA Completion (%)</label>
+            <input type="number" id="newStudentCompletion" class="text-input tabular-nums" min="0" max="100" value="90" required />
+          </div>
+        </div>
+
+        <div class="form-divider">Subject Marks (0–100)</div>
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label for="scoreDsa">Data Structures</label>
+            <input type="number" id="scoreDsa" class="text-input tabular-nums" min="0" max="100" value="82" required />
+          </div>
+          <div class="form-group">
+            <label for="scoreMaths">Engg. Mathematics</label>
+            <input type="number" id="scoreMaths" class="text-input tabular-nums" min="0" max="100" value="79" required />
+          </div>
+          <div class="form-group">
+            <label for="scoreDbms">Database Systems</label>
+            <input type="number" id="scoreDbms" class="text-input tabular-nums" min="0" max="100" value="85" required />
+          </div>
+          <div class="form-group">
+            <label for="scoreComm">Professional Comm.</label>
+            <input type="number" id="scoreComm" class="text-input tabular-nums" min="0" max="100" value="81" required />
+          </div>
+          <div class="form-group">
+            <label for="scoreLab">Practical Lab</label>
+            <input type="number" id="scoreLab" class="text-input tabular-nums" min="0" max="100" value="87" required />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="cancelAddModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Student Record</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Non-intrusive Toast Notification -->
+    <div class="toast hidden" id="toastNotification" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
